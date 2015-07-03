@@ -112,7 +112,7 @@ namespace Moq
 		}
 
 		/// <summary>
-		/// Creates the mock query with the underlying queriable implementation.
+		/// Creates the mock query with the underlying queryable implementation.
 		/// </summary>
 		internal static IQueryable<T> CreateMockQuery<T>() where T : class
 		{
@@ -121,7 +121,7 @@ namespace Moq
 		}
 
 		/// <summary>
-		/// Creates the mock query with the underlying queriable implementation.
+		/// Creates the mock query with the underlying queryable implementation.
 		/// </summary>
 		internal static IQueryable<T> CreateMockQuery<T>(MockBehavior behavior) where T : class
 		{
@@ -184,13 +184,20 @@ namespace Moq
 		/// Extension method used to support Linq-like setup properties that are not virtual but do have 
 		/// a getter and a setter, thereby allowing the use of Linq to Mocks to quickly initialize Dtos too :)
 		/// </summary>
-		internal static bool SetPropery<T, TResult>(Mock<T> target, Expression<Func<T, TResult>> propertyReference, TResult value)
+		internal static bool SetProperty<T, TResult>(Mock<T> target, Expression<Func<T, TResult>> propertyReference, TResult value)
 			where T : class
 		{
-			var memberExpr = (MemberExpression)propertyReference.Body;
-			var member = (PropertyInfo)memberExpr.Member;
-
-			member.SetValue(target.Object, value, null);
+			if (typeof(T).IsInterface)
+			{
+				target.SetupGet(propertyReference)
+					  .Returns(value);
+			}
+			else
+			{
+				var memberExpr = (MemberExpression)propertyReference.Body;
+				var member = (PropertyInfo)memberExpr.Member;
+				member.SetValue(target.Object, value, null);
+			}
 
 			return true;
 		}

@@ -102,6 +102,11 @@ namespace Moq
 		[SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
 		public Mock(MockBehavior behavior, params object[] args)
 		{
+			if (behavior == MockBehavior.Strict && !typeof(T).IsInterface)
+			{
+				var message = string.Format("Cannot use MockBehavior.Strict if T is not an interface. T was: {0}", typeof(T).FullName);
+				throw new ArgumentException(message, "behavior");
+			}
 			if (args == null)
 			{
 				args = new object[] { null };

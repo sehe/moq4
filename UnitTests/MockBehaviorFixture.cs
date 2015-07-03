@@ -6,21 +6,22 @@ using Xunit;
 
 namespace Moq.Tests
 {
+	using Moq.Tests.Linq;
+
 	public class MockBehaviorFixture
 	{
 		[Fact]
 		public void ShouldThrowIfStrictNoExpectation()
 		{
 			var mock = new Mock<IFoo>(MockBehavior.Strict);
-			try
-			{
-				mock.Object.Do();
-				Assert.True(false, "Should have thrown for unexpected call with MockBehavior.Strict");
-			}
-			catch (MockException mex)
-			{
-				Assert.Equal(MockException.ExceptionReason.NoSetup, mex.Reason);
-			}
+			var mex = Assert.Throws<MockException>(() => mock.Object.Do());
+			Assert.Equal(MockException.ExceptionReason.NoSetup, mex.Reason);
+		}
+
+		[Fact]
+		public void ThrowsIfStrictAndNotInterface()
+		{
+			Assert.Throws<ArgumentException>(() => new Mock<QueryableMocksFixture.Dto>(MockBehavior.Strict));
 		}
 
 		[Fact]
