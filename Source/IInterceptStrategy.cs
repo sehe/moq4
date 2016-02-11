@@ -1,4 +1,4 @@
-﻿using System;
+﻿esing System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,8 +9,8 @@ namespace Moq
 {
 	internal enum InterceptionAction
 	{
- 		Continue,
-        Stop
+		Continue,
+		Stop
 	}
 
 	internal interface IInterceptStrategy
@@ -28,20 +28,25 @@ namespace Moq
 
 	internal class InterceptorContext
 	{
-		private Dictionary<string, List<Delegate>> invocationLists = new Dictionary<string, List<Delegate>>();
-		private List<ICallContext> actualInvocations = new List<ICallContext>();
-		private List<IProxyCall> orderedCalls = new List<IProxyCall>();
+		private readonly Dictionary<string, List<Delegate>> invocationLists = new Dictionary<string, List<Delegate>>();
+		private readonly List<ICallContext> actualInvocations = new List<ICallContext>();
+		private readonly List<IProxyCall> orderedCalls = new List<IProxyCall>();
 
-		public InterceptorContext(Mock Mock, Type targetType, MockBehavior behavior)
+		public InterceptorContext(Mock mock, Type targetType)
 		{
-			this.Behavior = behavior;
-			this.Mock = Mock;
+			this.Mock = mock;
 			this.TargetType = targetType;
 		}
-		public Mock Mock { get; private set; }
-		public Type TargetType { get; private set; }
-		public MockBehavior Behavior { get; private set; }
 		
+		public Mock Mock { get; private set; }
+		
+		public Type TargetType { get; private set; }
+
+		public MockBehavior Behavior
+		{
+			get { return Mock.Behavior; }
+		}
+
 		#region InvocationLists
 		internal IEnumerable<Delegate> GetInvocationList(EventInfo ev)
 		{
@@ -150,10 +155,10 @@ namespace Moq
 		}
 		#endregion
 
-    }
+	}
 	
 	internal class CurrentInterceptContext
-	{        
+	{		 
 		public IProxyCall Call {get; set; }
 	}
 }

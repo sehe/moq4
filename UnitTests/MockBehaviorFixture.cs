@@ -24,6 +24,26 @@ namespace Moq.Tests
 		}
 
 		[Fact]
+		public void BehaviorStrictThenLooseUpdates()
+		{
+			var mock = new Mock<IFoo>(MockBehavior.Strict);
+			Assert.Throws<MockException>(() => mock.Object.Do());
+
+			mock.Behavior = MockBehavior.Loose;
+			Assert.DoesNotThrow(() => mock.Object.Do());
+		}
+
+		[Fact]
+		public void BehaviorLooseThenStrictUpdates()
+		{
+			var mock = new Mock<IFoo>(MockBehavior.Loose);
+			Assert.DoesNotThrow(() => mock.Object.Do());
+
+			mock.Behavior = MockBehavior.Strict;
+			Assert.Throws<MockException>(() => mock.Object.Do());
+		}
+
+		[Fact]
 		public void ShouldReturnDefaultForLooseBehaviorOnInterface()
 		{
 			var mock = new Mock<IFoo>(MockBehavior.Loose);

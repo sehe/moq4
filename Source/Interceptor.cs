@@ -6,19 +6,19 @@
 //with or without modification, are permitted provided 
 //that the following conditions are met:
 
-//    * Redistributions of source code must retain the 
-//    above copyright notice, this list of conditions and 
-//    the following disclaimer.
+//	  * Redistributions of source code must retain the 
+//	  above copyright notice, this list of conditions and 
+//	  the following disclaimer.
 
-//    * Redistributions in binary form must reproduce 
-//    the above copyright notice, this list of conditions 
-//    and the following disclaimer in the documentation 
-//    and/or other materials provided with the distribution.
+//	  * Redistributions in binary form must reproduce 
+//	  the above copyright notice, this list of conditions 
+//	  and the following disclaimer in the documentation 
+//	  and/or other materials provided with the distribution.
 
-//    * Neither the name of Clarius Consulting, Manas Technology Solutions or InSTEDD nor the 
-//    names of its contributors may be used to endorse 
-//    or promote products derived from this software 
-//    without specific prior written permission.
+//	  * Neither the name of Clarius Consulting, Manas Technology Solutions or InSTEDD nor the 
+//	  names of its contributors may be used to endorse 
+//	  or promote products derived from this software 
+//	  without specific prior written permission.
 
 //THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
 //CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
@@ -54,14 +54,14 @@ namespace Moq
 	/// </summary>
 	internal class Interceptor : ICallInterceptor
 	{
-		private Dictionary<ExpressionKey, IProxyCall> calls = new Dictionary<ExpressionKey, IProxyCall>();
+		private readonly Dictionary<ExpressionKey, IProxyCall> calls = new Dictionary<ExpressionKey, IProxyCall>();
 
-		public Interceptor(MockBehavior behavior, Type targetType, Mock mock)
+		public Interceptor(Type targetType, Mock mock)
 		{
-			InterceptionContext = new InterceptorContext(mock, targetType, behavior);
+			InterceptionContext = new InterceptorContext(mock, targetType);
 		}
 
-        internal InterceptorContext InterceptionContext { get; private set; }
+		internal InterceptorContext InterceptionContext { get; private set; }
 
 		internal void Verify()
 		{
@@ -129,10 +129,10 @@ namespace Moq
 		[SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
 		public void Intercept(ICallContext invocation)
 		{
-            CurrentInterceptContext localCtx = new CurrentInterceptContext();
+			CurrentInterceptContext localCtx = new CurrentInterceptContext();
 			foreach (var strategy in InterceptionStrategies())
 			{
-                if (InterceptionAction.Stop == strategy.HandleIntercept(invocation, InterceptionContext, localCtx))
+				if (InterceptionAction.Stop == strategy.HandleIntercept(invocation, InterceptionContext, localCtx))
 				{
 					break;
 				}

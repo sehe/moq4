@@ -6,19 +6,19 @@
 //with or without modification, are permitted provided 
 //that the following conditions are met:
 
-//    * Redistributions of source code must retain the 
-//    above copyright notice, this list of conditions and 
-//    the following disclaimer.
+//	  * Redistributions of source code must retain the 
+//	  above copyright notice, this list of conditions and 
+//	  the following disclaimer.
 
-//    * Redistributions in binary form must reproduce 
-//    the above copyright notice, this list of conditions 
-//    and the following disclaimer in the documentation 
-//    and/or other materials provided with the distribution.
+//	  * Redistributions in binary form must reproduce 
+//	  the above copyright notice, this list of conditions 
+//	  and the following disclaimer in the documentation 
+//	  and/or other materials provided with the distribution.
 
-//    * Neither the name of Clarius Consulting, Manas Technology Solutions or InSTEDD nor the 
-//    names of its contributors may be used to endorse 
-//    or promote products derived from this software 
-//    without specific prior written permission.
+//	  * Neither the name of Clarius Consulting, Manas Technology Solutions or InSTEDD nor the 
+//	  names of its contributors may be used to endorse 
+//	  or promote products derived from this software 
+//	  without specific prior written permission.
 
 //THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
 //CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
@@ -55,7 +55,7 @@ using Microsoft.CSharp;
 namespace Moq
 {
 	/// <include file='Mock.Generic.xdoc' path='docs/doc[@for="Mock{T}"]/*'/>
-    public partial class Mock<T> : Mock, IMock<T> where T : class
+	public partial class Mock<T> : Mock, IMock<T> where T : class
 	{
 		private static IProxyFactory proxyFactory = new CastleProxyFactory();
 		private T instance;
@@ -110,7 +110,7 @@ namespace Moq
 			this.Name = GenerateMockName();
 
 			this.Behavior = behavior;
-			this.Interceptor = new Interceptor(behavior, typeof(T), this);
+			this.Interceptor = new Interceptor(typeof(T), this);
 			this.constructorArguments = args;
 			this.ImplementedInterfaces.AddRange(typeof(T).GetInterfaces().Where(i => (i.IsPublic || i.IsNestedPublic) && !i.IsImport));
 			this.ImplementedInterfaces.Add(typeof(IMocked<T>));
@@ -177,9 +177,9 @@ namespace Moq
 		}
 
 		internal override bool IsDelegateMock
-        {
-            get { return typeof(T).IsDelegate(); }
-        }
+		{
+			get { return typeof(T).IsDelegate(); }
+		}
 
 		private void InitializeInstance()
 		{
@@ -530,14 +530,14 @@ namespace Moq
 		// NOTE: known issue. See https://connect.microsoft.com/VisualStudio/feedback/ViewFeedback.aspx?FeedbackID=318122
 		//public static implicit operator TInterface(Mock<T> mock)
 		//{
-		//    // TODO: doesn't work as expected but ONLY with interfaces :S
-		//    return mock.Object;
+		//	  // TODO: doesn't work as expected but ONLY with interfaces :S
+		//	  return mock.Object;
 		//}
 
 		//public static explicit operator TInterface(Mock<T> mock)
 		//{
-		//    // TODO: doesn't work as expected but ONLY with interfaces :S
-		//    throw new NotImplementedException();
+		//	  // TODO: doesn't work as expected but ONLY with interfaces :S
+		//	  throw new NotImplementedException();
 		//}
 	}
 }

@@ -6,19 +6,19 @@
 //with or without modification, are permitted provided 
 //that the following conditions are met:
 
-//    * Redistributions of source code must retain the 
-//    above copyright notice, this list of conditions and 
-//    the following disclaimer.
+//	  * Redistributions of source code must retain the 
+//	  above copyright notice, this list of conditions and 
+//	  the following disclaimer.
 
-//    * Redistributions in binary form must reproduce 
-//    the above copyright notice, this list of conditions 
-//    and the following disclaimer in the documentation 
-//    and/or other materials provided with the distribution.
+//	  * Redistributions in binary form must reproduce 
+//	  the above copyright notice, this list of conditions 
+//	  and the following disclaimer in the documentation 
+//	  and/or other materials provided with the distribution.
 
-//    * Neither the name of Clarius Consulting, Manas Technology Solutions or InSTEDD nor the 
-//    names of its contributors may be used to endorse 
-//    or promote products derived from this software 
-//    without specific prior written permission.
+//	  * Neither the name of Clarius Consulting, Manas Technology Solutions or InSTEDD nor the 
+//	  names of its contributors may be used to endorse 
+//	  or promote products derived from this software 
+//	  without specific prior written permission.
 
 //THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
 //CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
@@ -121,11 +121,31 @@ namespace Moq
 		}
 
 		/// <summary>
+		/// Creates the mock query with the underlying queriable implementation.
+		/// </summary>
+		internal static IQueryable<T> CreateMockQuery<T>(MockBehavior behavior) where T : class
+		{
+			var underlyingCreateMocks = Expression.Call(
+				null,
+				((Func<MockBehavior, IQueryable<T>>) CreateQueryable<T>).Method,
+				Expression.Constant(behavior));
+			return new MockQueryable<T>(underlyingCreateMocks);
+		}
+
+		/// <summary>
 		/// Wraps the enumerator inside a queryable.
 		/// </summary>
 		internal static IQueryable<T> CreateQueryable<T>() where T : class
 		{
 			return CreateMocks<T>().AsQueryable();
+		}
+
+		/// <summary>
+		/// Wraps the enumerator inside a queryable.
+		/// </summary>
+		internal static IQueryable<T> CreateQueryable<T>(MockBehavior behavior) where T : class
+		{
+			return CreateMocks<T>(behavior).AsQueryable();
 		}
 
 		/// <summary>
@@ -140,6 +160,21 @@ namespace Moq
 				var mock = new Mock<T>();
 				mock.SetupAllProperties();
 
+				yield return mock.Object;
+			}
+			while (true);
+		}
+
+		/// <summary>
+		/// Method that is turned into the actual call from .Query{T}, to 
+		/// transform the queryable query into a normal enumerable query.
+		/// This method is never used directly by consumers.
+		/// </summary>
+		private static IEnumerable<T> CreateMocks<T>(MockBehavior behavior) where T : class
+		{
+			do
+			{
+				var mock = new Mock<T>(behavior);
 				yield return mock.Object;
 			}
 			while (true);

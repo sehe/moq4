@@ -1,11 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Xunit;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Reflection;
 
-namespace Moq.Tests
+namespace Moq.Tests.Linq
 {
 	public class QueryableMocksFixture
 	{
@@ -125,21 +123,21 @@ namespace Moq.Tests
 			Assert.Equal("foo", target.Value);
 		}
 
-        [Fact]
-        public void ShouldSupportSettingDtoProtectedPropertyValue()
-        {
-            var target = Mock.Of<Dto>(x => x.ProtectedValue == "foo");
+		[Fact]
+		public void ShouldSupportSettingDtoProtectedPropertyValue()
+		{
+			var target = Mock.Of<Dto>(x => x.ProtectedValue == "foo");
 
-            Assert.Equal("foo", target.ProtectedValue);
-        }
+			Assert.Equal("foo", target.ProtectedValue);
+		}
 
-        [Fact]
-        public void ShouldSupportSettingDtoProtectedVirtualPropertyValue()
-        {
-            var target = Mock.Of<Dto>(x => x.ProtectedVirtualValue == "foo");
+		[Fact]
+		public void ShouldSupportSettingDtoProtectedVirtualPropertyValue()
+		{
+			var target = Mock.Of<Dto>(x => x.ProtectedVirtualValue == "foo");
 
-            Assert.Equal("foo", target.ProtectedVirtualValue);
-        }
+			Assert.Equal("foo", target.ProtectedVirtualValue);
+		}
 
 		[Fact]
 		public void ShouldOneOfCreateNewMock()
@@ -217,37 +215,37 @@ namespace Moq.Tests
 		}
 	}
 
-    public class Foo
-    {
-        protected Foo()
-        {
-        }
+	public class Foo
+	{
+		protected Foo()
+		{
+		}
 
-        public virtual string Value { get; private set; }
-    }
+		public virtual string Value { get; private set; }
+	}
 
-    public class FooFixture
-    {
-        [Fact]
-        public void Test()
-        {
-            var remote = Mock.Of<Foo>(rt => rt.Value == "foo");
-            Assert.Equal("foo", remote.Value);
-        }
-    }
+	public class FooFixture
+	{
+		[Fact]
+		public void Test()
+		{
+			var remote = Mock.Of<Foo>(rt => rt.Value == "foo");
+			Assert.Equal("foo", remote.Value);
+		}
+	}
 
-    public interface IBar
-    {
-        Foo Foo { get; set; }
-    }
+	public interface IBar
+	{
+		Foo Foo { get; set; }
+	}
 
-    public class BarFixture
-    {
-        [Fact]
-        public void Test()
-        {
-            var remote = Mock.Of<IBar>(rt => rt.Foo.Value == "foo");
-            Assert.Equal("foo", remote.Foo.Value);
-        }
-    }
+	public class BarFixture
+	{
+		[Fact]
+		public void Test()
+		{
+			var remote = Mock.Of<IBar>(rt => rt.Foo.Value == "foo");
+			Assert.Equal("foo", remote.Foo.Value);
+		}
+	}
 }
